@@ -1,0 +1,49 @@
+﻿@model Nop.Plugin.Payments.StripePayment.Models.ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+
+<form asp-controller="PaymentStripe" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default card-outline card-info" id="pnlOnboarding">
+            <div class="card-header">
+              <h5>Instructions</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    <b>
+                        If you're using this gateway ensure that your primary store currency is supported by
+                        Stripe.
+                    </b> <br><br> To use Stripe, you must create Stripe account. Follow these steps to configure
+                    your account for Stripe:<br> <br>1. Log in to your Stripe account
+                    (click <a href="https://stripe.com/" target="_blank">here</a> to create your account).
+                    <br>2. Select the <b> Secret Key</b> enter in Secret Key. <br>3. Click <b>Save</b> button on this page. <br>
+                </p>
+                <hr />
+             </div>
+        </div>
+        <div class="card card-default">
+            <div class="card-body">
+               <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SecretKey_OverrideForStore" asp-input="SecretKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <label class="form-control">SecretKey</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input id="SecretKey" type="text" name="SecretKey" class="form-control text-box single-line" value="@Model.SecretKey" />
+                        <span asp-validation-for="SecretKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

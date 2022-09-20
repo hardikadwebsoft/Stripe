@@ -1,0 +1,11 @@
+{
+  "Group": "Payment methods",
+  "FriendlyName": "Stripe",
+  "SystemName": "Payments.StripePayment",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Adwebsoft team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.StripePayment.dll",
+  "Description": "This plugin allows paying with Stripe"
+}
