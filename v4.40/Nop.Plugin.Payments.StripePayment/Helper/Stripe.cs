@@ -16,7 +16,7 @@ namespace Nop.Plugin.Payments.StripePayment.Helper
     public class StripeHelper
     {
         private string apikey;
-        public const string PaymentSuccessUrl = "order/history";
+        public const string PaymentSuccessUrl = "checkout/completed";
         public const string WebLocalBaseUrl = "https://localhost:44369/";
 
         public StripeHelper(string secretKey)
@@ -24,35 +24,39 @@ namespace Nop.Plugin.Payments.StripePayment.Helper
             apikey = secretKey;
         }
 
-        public string CreatePaymentRequest(long price)
+        public string CreatePaymentRequest(List<ProductDetailModel> productDetailModel)
         {
             try
             {
                 StripeConfiguration.ApiKey = apikey;
+                var LineItems = new List<SessionLineItemOptions>();
+                foreach (var item in productDetailModel)
+                {
+                    LineItems.Add(new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "usd",
+                            UnitAmount = item.Price * 100,
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Name
+                            },
+                        },
+                        Quantity = 1
+                    });
+                    
+                }
                 var options = new SessionCreateOptions
                 {
-                    LineItems = new List<SessionLineItemOptions>
-                    {
-                        new SessionLineItemOptions
-                        {
-                            PriceData = new SessionLineItemPriceDataOptions
-                            {
-                                UnitAmount = price * 100,
-                                Currency = "usd",
-                                ProductData = new SessionLineItemPriceDataProductDataOptions
-                                {
-                                    Name = "Product",
-                                },
-                            },
-                            Quantity = 1,
-                        },
-                    },
+
+                    LineItems = LineItems,
                     Mode = "payment",
                     SuccessUrl = WebLocalBaseUrl + PaymentSuccessUrl,
                     CancelUrl = "https://example.com/cancel",
                 };
-                var service = new SessionService();
-                Session session = service.Create(options);
+                var service2 = new SessionService();
+                Session session = service2.Create(options);
                 var result = session.Url;
                 return result;
             }

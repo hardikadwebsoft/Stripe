@@ -24,44 +24,39 @@ namespace Nop.Plugin.Payments.StripePayment.Helper
             apikey = secretKey;
         }
 
-        public string CreatePaymentRequest(long price,string productName)
+        public string CreatePaymentRequest(List<ProductDetailModel> productDetailModel)
         {
             try
             {
                 StripeConfiguration.ApiKey = apikey;
-                var options = new ProductCreateOptions
+                var LineItems = new List<SessionLineItemOptions>();
+                foreach (var item in productDetailModel)
                 {
-                    Name = productName
-                };
-                var service = new ProductService();
-                var productDetails = service.Create(options);
-
-                var options1 = new PriceCreateOptions
-                {
-                    Product = productDetails.Id ,
-                    UnitAmount = price*100,
-                    Currency = "usd",
-                };
-                var service1 = new PriceService();
-                var priceDetails = service1.Create(options1);
-
-
-                var options2 = new SessionCreateOptions
-                {
-                    Mode = "payment",
-                    LineItems = new List<SessionLineItemOptions>
+                    LineItems.Add(new SessionLineItemOptions
                     {
-                        new SessionLineItemOptions 
+                        PriceData = new SessionLineItemPriceDataOptions
                         {
-                            Price = priceDetails.Id, 
-                            Quantity = 1 
+                            Currency = "usd",
+                            UnitAmount = item.Price * 100,
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Name
+                            },
                         },
-                    },
+                        Quantity = 1
+                    });
+                    
+                }
+                var options = new SessionCreateOptions
+                {
+
+                    LineItems = LineItems,
+                    Mode = "payment",
                     SuccessUrl = WebLocalBaseUrl + PaymentSuccessUrl,
                     CancelUrl = "https://example.com/cancel",
                 };
                 var service2 = new SessionService();
-                Session session = service2.Create(options2);
+                Session session = service2.Create(options);
                 var result = session.Url;
                 return result;
             }

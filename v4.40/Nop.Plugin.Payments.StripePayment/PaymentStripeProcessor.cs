@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.StripePayment.Helper;
+using Nop.Plugin.Payments.StripePayment.Models;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -28,9 +30,11 @@ namespace Nop.Plugin.Payments.StripePayment
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly StripeSettings _settings;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
 
         public PaymentStripeProcessor(IOrderProcessingService orderProcessingService,IWorkContext workContext,ILocalizationService localizationService,IActionContextAccessor actionContextAccessor,
-             IHttpContextAccessor httpContextAccessor,StripeSettings settings,IUrlHelperFactory urlHelperFactory)
+             IHttpContextAccessor httpContextAccessor,StripeSettings settings,IUrlHelperFactory urlHelperFactory, IOrderService orderService, IProductService productService)
         {
             _orderProcessingService = orderProcessingService;
             _workContext = workContext;
@@ -39,6 +43,8 @@ namespace Nop.Plugin.Payments.StripePayment
             _httpContextAccessor = httpContextAccessor;
             _settings = settings;
             _urlHelperFactory = urlHelperFactory;
+            _orderService = orderService;
+            _productService = productService;
         }
         public bool HideInWidgetList => false;
 
@@ -127,14 +133,20 @@ namespace Nop.Plugin.Payments.StripePayment
 
         public async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
+            List<ProductDetailModel> product = new List<ProductDetailModel>();
             StripeHelper payment = new StripeHelper(_settings.SecretKey);
-            decimal price = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
-            var result = payment.CreatePaymentRequest((long)price);
+            var orderItems =await _orderService.GetOrderItemsAsync(postProcessPaymentRequest.Order.Id);
+            foreach (var item in orderItems)
+            {
+                var productDetails = _productService.GetProductByIdAsync(item.ProductId);
+                product.Add(new ProductDetailModel { Name = productDetails.Result.Name, Price = (long)Math.Round(productDetails.Result.Price, 2) });
+            }
+            var result = payment.CreatePaymentRequest(product);
             if (!string.IsNullOrEmpty(result))
             {
-                _httpContextAccessor.HttpContext.Response.Redirect(result);
+               _httpContextAccessor.HttpContext.Response.Redirect(result);
                 await _orderProcessingService.MarkOrderAsPaidAsync(postProcessPaymentRequest.Order);
-            }
+            } 
         }
 
         public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)

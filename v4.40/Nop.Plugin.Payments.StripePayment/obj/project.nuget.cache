@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UPwgyRGXFUVOUnsZ41ttWGnejPBjB5OmySzIg3/w+jGW2aFMaS/1VHQQ+mmd6RwNbQraFhPjN9yf0ZKvUJJEWQ==",
+  "dgSpecHash": "ZGA8GMAbc0wUdawv3no5ATD3dbQ7hC/Qv9DM+CM+kq/JP7AxiIxQRwDsjcvvnEY0KlCGu3rsCnq6VA3VXxJ1PA==",
   "success": true,
   "projectFilePath": "E:\\Krishna\\nopCommerce\\Plugins\\Nop.Plugin.Payments.StripePayment\\Nop.Plugin.Payments.StripePayment.csproj",
   "expectedPackageFiles": [

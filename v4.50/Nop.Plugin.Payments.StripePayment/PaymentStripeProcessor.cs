@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.StripePayment.Helper;
+using Nop.Plugin.Payments.StripePayment.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Localization;
@@ -132,11 +133,15 @@ namespace Nop.Plugin.Payments.StripePayment
 
         public async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
+            List<ProductDetailModel> product = new List<ProductDetailModel>();
             StripeHelper payment = new StripeHelper(_settings.SecretKey);
-            decimal price = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
             var orderItems =await _orderService.GetOrderItemsAsync(postProcessPaymentRequest.Order.Id);
-            var productDetails = _productService.GetProductByIdAsync(orderItems[0].ProductId);
-            var result = payment.CreatePaymentRequest((long)price,productDetails.Result.Name);
+            foreach (var item in orderItems)
+            {
+                var productDetails = _productService.GetProductByIdAsync(item.ProductId);
+                product.Add(new ProductDetailModel { Name = productDetails.Result.Name, Price = (long)Math.Round(productDetails.Result.Price, 2) });
+            }
+            var result = payment.CreatePaymentRequest(product);
             if (!string.IsNullOrEmpty(result))
             {
                _httpContextAccessor.HttpContext.Response.Redirect(result);
