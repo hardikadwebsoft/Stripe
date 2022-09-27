@@ -8,6 +8,7 @@ E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\logo.
 E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\plugin.json
 E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\Configure.cshtml
 E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\PaymentInfo.cshtml
+E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\Success.cshtml
 E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\_ViewImports.cshtml
 E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\Nop.Plugin.Payments.StripePayment.deps.json
 E:\Krishna\nopCommerce\Presentation\Nop.Web\Plugins\Payments.StripePayment\Nop.Plugin.Payments.StripePayment.dll

@@ -7,6 +7,7 @@ D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.Stri
 D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\plugin.json
 D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\Configure.cshtml
 D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\PaymentInfo.cshtml
+D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\Success.cshtml
 D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\Views\_ViewImports.cshtml
 D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\Nop.Plugin.Payments.StripePayment.deps.json
 D:\Isha\nopCommerce_4.50.3_Source\src\Presentation\Nop.Web\Plugins\Payments.StripePayment\Nop.Plugin.Payments.StripePayment.dll

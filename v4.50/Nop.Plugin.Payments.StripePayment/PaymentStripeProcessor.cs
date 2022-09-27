@@ -14,17 +14,12 @@ using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nop.Plugin.Payments.StripePayment
 {
     public class PaymentStripeProcessor : BasePlugin, IPaymentMethod, IMiscPlugin
     {
-        private readonly IOrderProcessingService _orderProcessingService;
-        private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -33,11 +28,9 @@ namespace Nop.Plugin.Payments.StripePayment
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
 
-        public PaymentStripeProcessor(IOrderProcessingService orderProcessingService,IWorkContext workContext,ILocalizationService localizationService,IActionContextAccessor actionContextAccessor,
+        public PaymentStripeProcessor(ILocalizationService localizationService,IActionContextAccessor actionContextAccessor,
              IHttpContextAccessor httpContextAccessor,StripeSettings settings,IUrlHelperFactory urlHelperFactory, IOrderService orderService, IProductService productService)
         {
-            _orderProcessingService = orderProcessingService;
-            _workContext = workContext;
             _localizationService = localizationService;
             _actionContextAccessor = actionContextAccessor;
             _httpContextAccessor = httpContextAccessor;
@@ -141,11 +134,10 @@ namespace Nop.Plugin.Payments.StripePayment
                 var productDetails = _productService.GetProductByIdAsync(item.ProductId);
                 product.Add(new ProductDetailModel { Name = productDetails.Result.Name, Price = (long)Math.Round(productDetails.Result.Price, 2) });
             }
-            var result = payment.CreatePaymentRequest(product);
+            var result = payment.CreatePaymentRequest(product, postProcessPaymentRequest.Order.Id);
             if (!string.IsNullOrEmpty(result))
             {
                _httpContextAccessor.HttpContext.Response.Redirect(result);
-                await _orderProcessingService.MarkOrderAsPaidAsync(postProcessPaymentRequest.Order);
             } 
         }
 

@@ -16,7 +16,7 @@ namespace Nop.Plugin.Payments.StripePayment.Helper
     public class StripeHelper
     {
         private string apikey;
-        public const string PaymentSuccessUrl = "checkout/completed";
+        public const string PaymentSuccessUrl = "order/success";
         public const string WebLocalBaseUrl = "https://localhost:44369/";
 
         public StripeHelper(string secretKey)
@@ -24,7 +24,7 @@ namespace Nop.Plugin.Payments.StripePayment.Helper
             apikey = secretKey;
         }
 
-        public string CreatePaymentRequest(List<ProductDetailModel> productDetailModel)
+        public string CreatePaymentRequest(List<ProductDetailModel> productDetailModel,int orderId)
         {
             try
             {
@@ -45,14 +45,12 @@ namespace Nop.Plugin.Payments.StripePayment.Helper
                         },
                         Quantity = 1
                     });
-                    
                 }
                 var options = new SessionCreateOptions
                 {
-
                     LineItems = LineItems,
                     Mode = "payment",
-                    SuccessUrl = WebLocalBaseUrl + PaymentSuccessUrl,
+                    SuccessUrl = WebLocalBaseUrl + PaymentSuccessUrl+ "?session_id={CHECKOUT_SESSION_ID}&orderId="+ orderId,
                     CancelUrl = "https://example.com/cancel",
                 };
                 var service2 = new SessionService();
